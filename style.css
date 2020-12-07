@@ -1,0 +1,42 @@
+#caption{
+    margin: auto;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-left: 4%;
+    font-family: Arial, sans-serif;
+    font-size: 20pt;
+}
+
+.nav-item {
+    width: 33.33%;
+    text-align: center;
+    background-color: lightgray;
+    color: black;
+}
+
+.nav-item a.active {
+    color: #dfff4f;
+    font-weight: bold;
+}
+
+.nav-item a:hover {
+    background-color: gray;
+}
+
+
+
+
+
+@media screen and (max-width: 500px) {
+    .navbar a {
+        float: none;
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+.tab1title {
+    text-align: center;
+}

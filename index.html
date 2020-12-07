@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Individual Project - Tennis Data</title>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href='./style.css' type="text/css">
+
+</head>
+<body>
+
+    <div id="caption" class="text-center">
+        <h3> Australian Open 2019 </h3>
+    </div>
+
+    <ul class = "nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="seedTab" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true" style="color: black;">
+                Top 32 Seeds
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="novakTab" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false" style="color: black;">
+                First Place
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="nadalTab" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false" style="color: black;">
+                Runner-Up
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="tab-content" >
+        <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="seedTab">
+            <div class="container-fluid" style="margin-top: 20px">
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-12 d-flex justify-content-center mb-3">
+                        <h3>Top 32 Seeds in 2019 Australian Open</h3>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center mb-3">
+                        <svg id="choropleth" viewBox="0 0 1000 800"></svg>
+                    </div>
+                    <div id="tooltip"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="novakTab">
+            <div class="container-fluid" style="margin-top: 20px">
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-12 d-flex justify-content-center mb-3">
+                        <h3>Novak Djokovic: Service Game</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div id="novakscatter" style="margin-right: 10px; margin-left: 25%;">
+                            <div class="row" style="background-color: #6C935C; border-radius: 10px; border: 1px #ffffff; padding: 5px;">
+                                <svg id="novak1" width=100% height=70% viewbox="0 0 600 600"></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div id="novakbar" style="margin-right: 25%; margin-left: 10px;">
+                            <div class="row" style="background-color: #3C638E; border-radius: 10px; border: 1px #ffffff; padding: 5px;">
+                                <svg id="novak2" width=100% height=70% viewbox="0 0 600 600"></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="tab3" role="tabpanel" aria-labelledby="nadalTab">
+            <div class="container-fluid" style="margin-top: 20px">
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-12 d-flex justify-content-center mb-3">
+                        <h3>Rafael Nadal: Service Game</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div id="nadalscatter" style="margin-right: 10px; margin-left: 25%;">
+                            <div class="row" style="background-color: #6C935C; border-radius: 10px; border: 1px #dfff4f; padding: 5px;">
+                                <svg id="nadal1" width=100% height=70% viewbox="0 0 600 600"></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div id="nadalbar" style="margin-right: 25%; margin-left: 10px;">
+                            <div class="row" style="background-color: #3C638E; border-radius: 10px; border: 1px #dfff4f; padding: 5px;">
+                                <svg id="nadal2" width=100% height=70% viewbox="0 0 600 600"></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+<script>
+
+    let margin = {top: 80, right: 100, bottom: 20, left: 60},
+        width = 660 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    let novak1svg = d3.select("#novak1").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+    let novak2svg = d3.select("#novak2").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+    let nadal1svg = d3.select("#nadal1").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+    let nadal2svg = d3.select("#nadal2").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+
+    d3.csv("serves.csv").then(function (data) {
+
+        data = data.filter(function(d) {
+            return d.server === "Djokovic"
+        });
+
+
+        let x = d3.scaleLinear().range([0, width]);
+        let y = d3.scaleLinear().range([height, 0]);
+
+        x.domain([-5, 15]);
+        y.domain([0, 20]);
+
+        novak1svg.selectAll("dot")
+            .data(data)
+            .enter().append("circle")
+            .attr("r", 2)
+            .attr("cx", function(d) {return x(d.x); })
+            .attr("cy", function(d) {return y(d.y); });
+
+        novak1svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        novak1svg.append("g")
+            .call(d3.axisLeft(y));
+
+    });
+
+    d3.csv("serves.csv").then(function (data) {
+
+        data = data.filter(function(d) {
+            return d.server === "Nadal"
+        });
+
+        data.forEach(function(d) {
+            d.y = +d.y;
+        });
+
+        let x = d3.scaleLinear().range([0, width]);
+        let y = d3.scaleLinear().range([height, 0]);
+
+        x.domain([-5, 15]);
+        y.domain([0, 10]);
+
+        nadal1svg.selectAll("dot")
+            .data(data)
+            .enter().append("circle")
+            .attr("r", 2)
+            .attr("cx", function(d) {return x(d.x); })
+            .attr("cy", function(d) {return y(d.y); });
+
+        nadal1svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        nadal1svg.append("g")
+            .call(d3.axisLeft(y));
+
+    })
+
+    d3.csv("points.csv").then(function (data) {
+
+        data = data.filter(function(d) {
+            return d.server === "Djokovic"
+        });
+
+        let x = d3.scaleBand().range([0, width]).padding(0.1);
+        let y = d3.scaleLinear().range([height, 0]);
+
+        x.domain(data.map(function(d) { return d.reason; }));
+        y.domain([0, 10]);
+
+        novak2svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return x(d.reason); })
+            .attr("width", x.bandwidth())
+            .attr("y", function(d) { return y(d.datanumber); })
+            .attr("height", function(d) { return height - y(d.datanumber); })
+            .attr("fill", "white");
+
+        novak2svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x))
+            .style("font-size", "20px");
+
+        novak2svg.append("text")
+            .attr("x", (width / 2))
+            .attr("y", 0 - (margin.top)/3)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "25px")
+            .style("font-weight", "bold")
+            .style("fill", "white")
+            .text("Points Won on Serve");
+    });
+
+    let mymap = d3.select("#choropleth")
+
+    let seeds = "seeds.csv";
+
+    let geojson = "countries.json";
+    let topo = "http://enjalot.github.io/wwsd/data/world/world-110m.geojson";
+
+    let projection = d3.geoMercator().scale(1300).translate([500, 400])
+
+    Promise.all([
+        d3.json(geojson),
+        d3.csv(seeds)],d3.autoType()).then(main)
+
+    function main(data) {
+
+        console.log(data[0]);
+
+/*        let geoJson = topojson.feature(data[0],data[0].objects.topo).features; */
+        let geoJson = data[0]
+        let geo_generator = d3.geoPath().projection(projection);
+        let my_data = d3.group(data[1],function(d){ return d.country;});
+
+        console.log(my_data);
+
+        let mapCanvas = mymap.append("g")
+        mapCanvas.selectAll("path")
+        .data(geoJson)
+        .enter()
+        .append("path")
+        .attr("class", "path_geo")
+        .attr("d", geo_generator)
+        .attr("fill", "white")
+        .on("mousemove", function (mouseData, d) {
+            d3.select("#tooltip")
+                .style("opacity", .8)
+                .style("left", (mouseData.clientX + 10).toString() + "px")
+                .style("top", (mouseData.clientY + 10).toString() + "px")
+                .html(
+                    "<div class='tooltipData'>Name: " + my_data.get(d.properties.GEOID)[0].name + "</div>" +
+                    "<div class='tooltipData'>Seed: " + my_data.get(d.properties.GEOID)[0].seed + "</div>" +
+                    "<div class='tooltipData'>Eliminated: " + my_data.get(d.properties.GEOID)[0].eliminated + "</div>" +
+                    "<div class='tooltipData'></div>")
+        })
+
+        mymap.call(d3.zoom()
+            .extent([[0,0], [1000,800]])
+            .scaleExtent([1,8])
+            .on("zoom", zoomed)
+        )
+
+        function zoomed({transform}) {
+            mapCanvas.attr("transform", transform)
+
+        }
+    }
+
+
+</script>
+
+
+
+
+
+</body>
+</html>
